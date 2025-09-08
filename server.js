@@ -17,6 +17,7 @@ import { errorHandler } from "./src/middleware/errorHandler.js";
 // Import utilities
 import { createDefaultAdmin } from "./src/utils/createDefaultAdmin.js";
 
+// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -54,4 +55,5 @@ app.use("*", (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-export default app; // ❌ no app.listen here
+// ⚡ Important: No app.listen() here for serverless
+export default app;
