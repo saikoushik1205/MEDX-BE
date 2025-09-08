@@ -1,43 +1,31 @@
 import dotenv from "dotenv";
 import express from "express";
 
-// Import configurations
 import connectDB from "./src/config/database.js";
 import configureExpress from "./src/config/express.js";
 
-// Import routes
 import authRoutes from "./src/routes/auth.js";
 import careUnitRoutes from "./src/routes/careUnit.js";
 import userRoutes from "./src/routes/user.js";
 import roleRoutes from "./src/routes/role.js";
 
-// Import middleware
 import { errorHandler } from "./src/middleware/errorHandler.js";
-
-// Import utilities
 import { createDefaultAdmin } from "./src/utils/createDefaultAdmin.js";
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
-
-// Configure Express middleware
 configureExpress(app);
 
-// Connect to MongoDB
 connectDB().then(() => {
-  // Create default admin user after database connection
   createDefaultAdmin();
 });
 
-// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/care-units", careUnitRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/roles", roleRoutes);
 
-// Health check route
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "OK",
@@ -47,13 +35,10 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// 404 handler
 app.use("*", (req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Error handling middleware
 app.use(errorHandler);
 
-// ⚡ Important: No app.listen() here for serverless
 export default app;
